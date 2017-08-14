@@ -1,0 +1,59 @@
+---
+# https://github.com/github/orchestrator
+
+- name: Install beta release from github as currently only it support sqlite backend
+  apt:
+    deb: https://github.com/github/orchestrator/releases/download/v3.0.pre-release/orchestrator_3.0_amd64.deb
+
+- name: Add orchestrator repo
+  apt_repository:
+    repo: deb https://packagecloud.io/github/orchestrator/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release | lower }} main
+    state: present
+
+- name: Add orchestrator key
+  apt_key:
+    url: "https://packagecloud.io/github/orchestrator/gpgkey"
+    state: present
+
+- name: Install orchestrator necessary packages
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - orchestrator-cli
+    - orchestrator
+    - curl
+    - jq
+
+- name: Fix orchestrator init script
+  blockinfile:
+    path: /etc/init.d/orchestrator
+    block: |
+        ### BEGIN INIT INFO
+        # Provides:          orchestrator
+        # Required-Start:    $remote_fs $network
+        # Required-Stop:     $remote_fs $network
+        # Default-Start:     2 3 4 5
+        # Default-Stop:      0 1 6
+        # Short-Description: orchestrator daemon
+        # Description:       Starts Orchestrator Daemon
+        ### END INIT INFO
+    insertafter: "#!/bin/bash"
+
+- name: Configure orchestrator
+  template:
+    src: orchestrator.conf.j2
+    dest: /etc/orchestrator.conf.json
+    owner: root
+    group: root
+    mode: 0600
+  notify: restart orchestrator
+
+- meta: flush_handlers
+
+- name: Install orchestrator-client
+  copy:
+    src: orchestrator-client
+    dest: /usr/bin/orchestrator-client
+    mode: 0755
+
+- name: Add first mysql server into orchestrator
+  shell: orchestrator-client -c discover -i {{ groups['mysql'][0] }}:{{ mysql_port }}

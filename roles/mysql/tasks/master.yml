@@ -1,0 +1,13 @@
+- include: server.yml
+
+- name: Ensure replication user exists on master
+  mysql_user:
+    name: "{{ replication_user.name }}"
+    host: "{{ replication_user.host | default('%') }}"
+    password: "{{ replication_user.password }}"
+    priv: "{{ replication_user.priv | default('*.*:REPLICATION SLAVE,REPLICATION CLIENT') }}"
+    state: present
+    login_user: "{{ root_user.name }}"
+    login_password: "{{ root_user.password }}"
+    login_port: "{{ mysql_port }}"
+  when: replication_user

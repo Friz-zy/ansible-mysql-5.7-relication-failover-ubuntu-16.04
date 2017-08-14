@@ -1,0 +1,8 @@
+[Unit]
+Description=Mysqlchk Agent Service
+After=network.target
+ 
+[Service]
+ExecStart={{ mysqlchk_path }}
+User=root
+StandardOutput=socket

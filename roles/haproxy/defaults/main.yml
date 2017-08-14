@@ -1,0 +1,5 @@
+mysql_port: 3306
+mysqlchk_port: 9199
+mysqlchk_path: /usr/local/sbin/mysqlchk
+frontend_mysql_master_port: 3310
+frontend_mysql_slave_port: 3311

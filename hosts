@@ -1,0 +1,11 @@
+Mysql-01 ansible_user=ubuntu ansible_host=
+Mysql-02 ansible_user=ubuntu ansible_host=
+Control-01 ansible_user=ubuntu ansible_host=
+
+[mysql]
+Mysql-01 mysql_role=master
+Mysql-02 mysql_role=slave
+Control-01
+
+[orchestrator]
+Control-01

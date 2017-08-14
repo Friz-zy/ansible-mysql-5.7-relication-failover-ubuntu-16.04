@@ -1,0 +1,54 @@
+---
+# Based on https://github.com/cturner80/digital-ocean-ansible/blob/master/handlers.yml
+# The MIT License (MIT)
+# Copyright (c) 2014 Chris Turner
+# Modify by Filipp Kucheryavy <filipp.s.frizzy@gmail.com>
+
+
+# to verify ufw configuration run:
+# sudo ufw status verbose
+
+- name: Install ufw
+  apt: package=ufw state=present
+
+- name: Configure ufw defaults
+  ufw: direction={{ item.direction }} policy={{ item.policy }}
+  with_items:
+    - { direction: 'incoming', policy: 'deny' }
+    - { direction: 'outgoing', policy: 'allow' }
+  notify:
+    - restart ufw
+
+- name: Configure ufw rules
+  ufw: rule={{ item.rule }} port={{ item.port }} proto={{ item.proto }}
+  with_items:
+    - { rule: 'limit', port: '{{ ssh_port | default("22") }}', proto: 'tcp' }
+  notify:
+    - restart ufw
+
+- name: Allow Hosts
+  ufw:
+    rule: allow
+    src: "{{ hostvars[item].ansible_default_ipv4.interface }}"
+  with_items: groups['all']
+  notify:
+    - restart ufw
+
+- name: Allow local networks
+  ufw:
+    rule: allow
+    src: '{{ item }}'
+  with_items:
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+  notify:
+    - restart ufw
+
+- name: Enable ufw logging
+  ufw: logging=on
+  notify:
+    - restart ufw
+
+- name: Enable ufw
+  ufw: state=enabled

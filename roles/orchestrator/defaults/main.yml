@@ -1,0 +1,2 @@
+mysql_port: 3306
+recovery_log_path: /var/log/orchestrator-recovery.log

@@ -1,0 +1,9 @@
+[Unit]
+Description=Mysqlchk LibreNMS Agent Socket
+ 
+[Socket]
+ListenStream={{ mysqlchk_port }}
+Accept=yes
+ 
+[Install]
+WantedBy=sockets.target

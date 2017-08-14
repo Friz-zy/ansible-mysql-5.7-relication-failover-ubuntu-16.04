@@ -1,0 +1,54 @@
+---
+- name: Prepare Ubuntu for work with Ansible
+  hosts: all
+  gather_facts: False
+
+  tasks:
+  - name: install python 2
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
+- name: Global Setup
+  hosts: all
+
+  tasks:
+    - name: Install first necessary packages
+      apt: name={{ item }} state=present update_cache=yes
+      with_items:
+        - htop
+        - atop
+        - mc
+        - nano
+        - curl
+
+    - name: Add hosts
+      lineinfile: dest=/etc/hosts regexp='.*{{ item }}$' line="{{ hostvars[item].ansible_host }} {{item}}" state=present
+      when: hostvars[item].ansible_host is defined
+      with_inventory_hostnames:
+        - all
+
+  roles:
+    - ssh
+    - ufw
+    - haproxy
+
+- name: Mysql Setup
+  hosts: mysql
+  vars:
+    replication_user:
+      name: replicator
+      host: '%'
+      password: '_strong_password_'
+    root_user:
+      name: root
+      host: '%'
+      password: '_strong_password_'
+
+  roles:
+    - mysql
+
+- name: Orchestrator Setup
+  hosts: orchestrator
+  vars: []
+
+  roles:
+    - orchestrator

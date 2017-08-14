@@ -1,0 +1,17 @@
+---
+# Based on https://github.com/vitalk/ansible-secure-ssh/blob/master/tasks/main.yml
+# The MIT License (MIT)
+# Copyright (c) Vital Kudzelka
+# Modify by Filipp Kucheryavy <filipp.s.frizzy@gmail.com>
+
+- name: Disable empty password login
+  lineinfile: dest={{ ssh_config }} regexp="^#?PermitEmptyPasswords" line="PermitEmptyPasswords no"
+  notify: restart ssh
+
+- name: Disable password login
+  lineinfile: dest={{ ssh_config }} regexp="^#?PasswordAuthentication" line="PasswordAuthentication no"
+  notify: restart ssh
+
+- name: Enable PAM
+  lineinfile: dest={{ ssh_config }} regexp="^#?UsePAM" line="UsePAM yes"
+  notify: restart ssh

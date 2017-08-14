@@ -1,0 +1,17 @@
+mysql_config: "/etc/mysql/mysql.conf.d/mysqld.cnf"
+mysql_port: 3306
+mysqld: mysql
+root_user:
+  name: root
+  host: '%'
+  password: 'password'
+replication_user:
+  name: replicator
+  host: '%'
+  password: 'password'
+backup_src: /backup/mysql_dump_{{ ansible_date_time.date }}.sql.gz
+backup_dir: /backup
+backup_hour: 5
+backup_minute: 0
+frontend_mysql_master_port: 3310
+frontend_mysql_slave_port: 3311

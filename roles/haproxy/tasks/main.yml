@@ -1,0 +1,34 @@
+---
+- name: Install haproxy
+  apt: package=haproxy state=present update_cache=yes
+
+- name: Set haproxy config
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+  notify: restart haproxy
+
+- name: Set mysqlchk socket
+  template:
+    src: mysqlchk.socket.j2
+    dest: /etc/systemd/system/mysqlchk.socket
+  notify: restart mysqlchk
+  delegate_to: "{{ item }}"
+  with_items: "{{ groups['mysql'] }}"
+
+- name: Set mysqlchk service
+  template:
+    src: mysqlchk@.service.j2
+    dest: /etc/systemd/system/mysqlchk@.service
+  notify: restart mysqlchk
+  delegate_to: "{{ item }}"
+  with_items: "{{ groups['mysql'] }}"
+
+- name: Set mysqlchk script
+  template:
+    src: mysqlchk.j2
+    dest: "{{ mysqlchk_path }}"
+    mode: 0755
+  notify: restart mysqlchk
+  delegate_to: "{{ item }}"
+  with_items: "{{ groups['mysql'] }}"

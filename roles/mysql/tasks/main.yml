@@ -1,0 +1,31 @@
+---
+- name: Add Oracle repo
+  apt_repository:
+    repo: deb http://repo.mysql.com/apt/{{ ansible_distribution | lower }} {{ ansible_distribution_release | lower }} mysql-5.7
+    state: present
+
+- name: Add Oracle key
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 5072E1F5
+
+- name: Install mysql necessary packages
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+    - mysql-client
+    - mysql-utilities
+    - python-mysqldb
+
+- name: Create my.cnf because root user require password on this setup
+  template:
+    src: my.cnf.j2
+    dest: /root/.my.cnf
+    owner: root
+    group: root
+    mode: 0600
+
+- include: master.yml
+  when: mysql_role == 'master'
+
+- include: slave.yml
+  when: mysql_role == 'slave'
