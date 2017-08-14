@@ -1,2 +1,5 @@
 mysql_port: 3306
 recovery_log_path: /var/log/orchestrator-recovery.log
+mysql_root_user:
+  name: root
+  password: ''

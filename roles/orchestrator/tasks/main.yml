@@ -38,6 +38,14 @@
         ### END INIT INFO
     insertafter: "#!/bin/bash"
 
+- name: Create my.cnf because root user require password on this setup
+  template:
+    src: my.cnf.j2
+    dest: /root/.my.cnf
+    owner: root
+    group: root
+    mode: 0600
+
 - name: Configure orchestrator
   template:
     src: orchestrator.conf.j2
