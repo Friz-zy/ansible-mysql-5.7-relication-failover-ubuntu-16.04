@@ -29,8 +29,8 @@
 - name: Allow Hosts
   ufw:
     rule: allow
-    src: "{{ hostvars[item].ansible_default_ipv4.interface }}"
-  with_items: groups['all']
+    src: "{{ hostvars[item]['ansible_default_ipv4']['address'] }}"
+  with_items: "{{ groups['all'] }}"
   notify:
     - restart ufw
 
