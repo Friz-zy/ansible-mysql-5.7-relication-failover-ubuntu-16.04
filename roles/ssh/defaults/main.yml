@@ -1,2 +1,0 @@
-ssh_config: /etc/ssh/sshd_config
-sshd: ssh

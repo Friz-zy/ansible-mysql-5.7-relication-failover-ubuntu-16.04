@@ -1,6 +1,7 @@
 ---
 - name: Prepare Ubuntu for work with Ansible
   hosts: all
+  become: true
   gather_facts: False
 
   tasks:
@@ -9,6 +10,7 @@
 
 - name: Global Setup
   hosts: all
+  become: true
 
   tasks:
     - name: Install first necessary packages
@@ -27,12 +29,12 @@
         - all
 
   roles:
-    - ssh
     - ufw
     - haproxy
 
 - name: Mysql Setup
   hosts: mysql
+  become: true
   vars:
     replication_user:
       name: replicator
@@ -48,7 +50,11 @@
 
 - name: Orchestrator Setup
   hosts: orchestrator
-  vars: []
+  become: true
+  vars:
+    mysql_root_user:
+      name: root
+      password: '_strong_password_'
 
   roles:
     - orchestrator

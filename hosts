@@ -5,7 +5,6 @@ Control-01 ansible_user=vagrant ansible_host=192.168.33.12
 [mysql]
 Mysql-01 mysql_role=master
 Mysql-02 mysql_role=slave
-Control-01
 
 [orchestrator]
 Control-01
