@@ -11,3 +11,13 @@
     login_password: "{{ root_user.password }}"
     login_port: "{{ mysql_port }}"
   when: replication_user
+
+- name: Ensure root user exists on master
+  mysql_user:
+    name: "{{ root_user.name }}"
+    host: "{{ root_user.host | default('%') }}"
+    password: "{{ root_user.password }}"
+    priv: "{{ root_user.priv | default('*.*:ALL,GRANT') }}"
+    state: present
+    login_port: "{{ mysql_port }}"
+  ignore_errors: yes

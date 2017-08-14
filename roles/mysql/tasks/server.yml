@@ -25,10 +25,13 @@
     - { regexp: '^#?\s*sync-master-info', line: "sync-master-info = 1", after: "" }
   notify: restart mysql
 
+- name: Force restart mysql
+  meta: flush_handlers
+
 - name: Ensure root user exists on all instances
   mysql_user:
     name: "{{ root_user.name }}"
-    host: "{{ root_user.host | default('%') }}"
+    host: "localhost"
     password: "{{ root_user.password }}"
     priv: "{{ root_user.priv | default('*.*:ALL,GRANT') }}"
     state: present
@@ -48,5 +51,5 @@
     name: "daily backup of all mysql databases"
     minute: "{{ backup_minute }}"
     hour: "{{ backup_hour }}"
-    job: "/usr/bin/mysqldump -h 127.0.0.1 -P {{ frontend_mysql_slave_port }} -A -R -E --triggers --single-transaction --add-drop-database --flush-privileges | /bin/gzip > {{ backup_dir }}/mysql_dump_{{ ansible_date_time.date }}.sql.gz"
+    job: "/usr/bin/mysqldump -h 127.0.0.1 -P {{ frontend_mysql_slave_port }} -A -R -E --triggers --single-transaction --add-drop-database --flush-privileges | /bin/gzip > {{ backup_dir }}/mysql_dump_`date +%Y-%m-%d`.sql.gz"
     user: "root"

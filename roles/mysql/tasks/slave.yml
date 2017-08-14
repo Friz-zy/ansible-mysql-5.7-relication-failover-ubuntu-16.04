@@ -9,26 +9,32 @@
   register: replica_status
   ignore_errors: yes
 
+- stat:
+    path: "{{ backup_src }}"
+  register: dump
+
 # https://github.com/ansible/ansible-modules-core/issues/932
 - name: Unpack sql dump
   shell: gunzip < "{{ backup_src }}" > /tmp/dump.sql
   when: 
     - replica_status.msg.find('Server is not configured as mysql slave') != -1   # TODO: error when replica is configured
+    - dump.stat.exists is defined and dump.stat.exists
 
 - name: Seed database with dump
   mysql_db:
     name: all
     state: import
-    target: /tmp/master_dump.sql
+    target: /tmp/dump.sql
     login_user: "{{ root_user.name }}"
     login_password: "{{ root_user.password }}"
     login_port: "{{ mysql_port }}"
   when:
     - replica_status.msg.find('Server is not configured as mysql slave') != -1
+    - dump.stat.exists is defined and dump.stat.exists
 
 - name: Removing temporary dump
   file:
-    path: /tmp/master_dump.sql
+    path: /tmp/dump.sql
     state: absent
 
 - name: Set replication master

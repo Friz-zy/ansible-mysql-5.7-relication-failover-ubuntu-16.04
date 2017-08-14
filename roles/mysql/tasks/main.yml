@@ -25,7 +25,7 @@
     mode: 0600
 
 - include: master.yml
-  when: mysql_role == 'master'
+  when: mysql_role is defined and mysql_role == 'master'
 
 - include: slave.yml
-  when: mysql_role == 'slave'
+  when: mysql_role is defined and mysql_role == 'slave'
