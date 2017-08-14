@@ -1,6 +1,6 @@
-Mysql-01 ansible_user=ubuntu ansible_host=
-Mysql-02 ansible_user=ubuntu ansible_host=
-Control-01 ansible_user=ubuntu ansible_host=
+Mysql-01 ansible_user=vagrant ansible_host=192.168.33.10
+Mysql-02 ansible_user=vagrant ansible_host=192.168.33.11
+Control-01 ansible_user=vagrant ansible_host=192.168.33.12
 
 [mysql]
 Mysql-01 mysql_role=master
