@@ -6,9 +6,9 @@ This Ansible role should
 3) install Mysql 5.7 packages
 4) configure [mysql master-slave replication](https://dev.mysql.com/doc/refman/5.7/en/replication.html) (replica seed is possible)
 5) install [Haproxy](https://en.wikipedia.org/wiki/HAProxy) as mysql frontend
-6) install [Orchestrator](https://github.com/github/orchestrator) for automatic failover and simply mysql replication management
+6) install [Orchestrator](https://github.com/github/orchestrator) for automatic failover and simply mysql replication management  
 Note: resolving hostnames important for orchestrator
-8) add mysqldump into root cron on all mysql servers that will take full backup from mysql slave daily
+7) add mysqldump into root cron on all mysql servers that will take full backup from mysql slave daily
 
 Tested with ubuntu 16.04, debian 8 and ansible 2.3 (and vagrant 1.9)
 
