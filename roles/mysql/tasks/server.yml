@@ -23,6 +23,7 @@
     - { regexp: '^#?\s*master-info-repository', line: "master-info-repository = TABLE", after: "" }
     - { regexp: '^#?\s*relay-log-info-repository', line: "relay-log-info-repository = TABLE", after: "" }
     - { regexp: '^#?\s*sync-master-info', line: "sync-master-info = 1", after: "" }
+    - { regexp: '^#?\s*slave-skip-errors', line: "slave-skip-errors = all", after: "" }
   notify: restart mysql
 
 - name: Force restart mysql
