@@ -47,15 +47,15 @@ frontend ft_mysql_master
 backend bk_mysql_master
         balance leastconn
         option tcp-check
-        tcp-check expect string MySQL\ master
+        tcp-check expect string MySQL\ master\ is\ running.
         option allbackups
         default-server port {{ mysqlchk_port }} inter 2s downinter 5s rise 3 fall 2 slowstart 60s maxconn 64 maxqueue 128 weight 100
-        {% for host in groups['mysql'] %}
-        {% if hostvars[host]['mysql_role'] == 'master' %}
+        {% for host in groups['mysql'] -%}
+        {%- if hostvars[host]['mysql_role'] == 'master' -%}
         server {{ host }} {{ hostvars[host].ansible_host }}:{{ mysql_port }} check backup
-        {% else %}
+        {% else -%}
         server {{ host }} {{ hostvars[host].ansible_host }}:{{ mysql_port }} check
-        {% endif %}
+        {% endif -%}
         {% endfor %}
 
 frontend ft_mysql_slave
@@ -65,9 +65,9 @@ frontend ft_mysql_slave
 backend bk_mysql_slave
         balance leastconn
         option tcp-check
-        tcp-check expect string is\ running.
+        tcp-check expect string MySQL\ slave\ is\ running.
         option allbackups
         default-server port {{ mysqlchk_port }} inter 2s downinter 5s rise 3 fall 2 slowstart 60s maxconn 64 maxqueue 128 weight 100
-        {% for host in groups['mysql'] %}
+        {% for host in groups['mysql'] -%}
         server {{ host }} {{ hostvars[host].ansible_host }}:{{ mysql_port }} check
         {% endfor %}
