@@ -51,7 +51,11 @@ backend bk_mysql_master
         option allbackups
         default-server port {{ mysqlchk_port }} inter 2s downinter 5s rise 3 fall 2 slowstart 60s maxconn 64 maxqueue 128 weight 100
         {% for host in groups['mysql'] %}
+        {% if hostvars[host]['mysql_role'] == 'master' %}
+        server {{ host }} {{ hostvars[host].ansible_host }}:{{ mysql_port }} check backup
+        {% else %}
         server {{ host }} {{ hostvars[host].ansible_host }}:{{ mysql_port }} check
+        {% endif %}
         {% endfor %}
 
 frontend ft_mysql_slave

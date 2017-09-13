@@ -83,12 +83,18 @@ if [[ "${SLAVE_IO}" == "Yes" ]] && [[ "${SLAVE_SQL}" == "Yes" ]]; then
         return_ok
     fi
 else
+    {% if groups['mysql']|length > 2 %}
     MASTER_SLAVE_HOSTS=$($CMDLINE 'SHOW SLAVE HOSTS' 2>/dev/null | wc -l)
     if [ $MASTER_SLAVE_HOSTS -gt 1 ]; then
         role='master'
         READ_ONLY=$($CMDLINE 'SHOW GLOBAL VARIABLES LIKE "read_only"' --vertical 2>/dev/null | tail -1 | awk {'print $2'})
         [[ "${READ_ONLY}" == "OFF" ]] && return_ok
     fi
+    {% else %}
+    role='master'
+    READ_ONLY=$($CMDLINE 'SHOW GLOBAL VARIABLES LIKE "read_only"' --vertical 2>/dev/null | tail -1 | awk {'print $2'})
+    [[ "${READ_ONLY}" == "OFF" ]] && return_ok
+    {% endif %}
 fi
 
 return_fail

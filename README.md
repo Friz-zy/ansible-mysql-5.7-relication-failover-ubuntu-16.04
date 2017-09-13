@@ -12,6 +12,10 @@ Note: resolving hostnames important for orchestrator
 
 Tested with ubuntu 16.04, debian 8 and ansible 2.3 (and vagrant 1.9)
 
+**Important**  
+For avoiding split brains I recommend minimum setup of master + 2 slaves  
+But this role would work even with master + 1 slave, master initially marked as backup in haproxy exactly for this type of setup
+
 Minimum variables that you should know and set:
 
 mysql.yml
