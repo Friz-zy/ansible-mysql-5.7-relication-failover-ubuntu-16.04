@@ -16,6 +16,10 @@ Tested with ubuntu 16.04, debian 8 and ansible 2.3 (and vagrant 1.9)
 For avoiding split brains I recommend minimum setup of master + 2 slaves  
 But this role would work even with master + 1 slave, master initially marked as backup in haproxy exactly for this type of setup
 
+**Another Important**  
+By default all servers contain read-only=1 in my.cnf, master would be changed in runtime after setup.
+So you'll get read only master after any restart except orchestrator auto failover
+
 Minimum variables that you should know and set:
 
 mysql.yml

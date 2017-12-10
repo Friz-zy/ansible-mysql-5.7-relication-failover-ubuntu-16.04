@@ -14,6 +14,7 @@
   with_items:
     - { regexp: '^#?\s*bind-address', line: "bind-address = 0.0.0.0", after: "" }
     - { regexp: '^#?\s*server-id', line: "server-id = {{ groups.mysql.index(inventory_hostname) + 1 }}", after: "" }
+    - { regexp: '^#?\s*report-host', line: "report-host = {{ inventory_hostname }}", after: "" }
     - { regexp: '^#?\s*log_bin', line: "log_bin = /var/log/mysql/mysql-bin.log", after: "" }
     - { regexp: '^#?\s*relay-log', line: "relay-log = /var/log/mysql/mysql-relay-bin.log", after: '^#?\s*log_bin' }
 #    - { regexp: '^#?\s*binlog-format', line: "binlog-format = ROW", after: "" }
@@ -24,6 +25,7 @@
     - { regexp: '^#?\s*relay-log-info-repository', line: "relay-log-info-repository = TABLE", after: "" }
     - { regexp: '^#?\s*sync-master-info', line: "sync-master-info = 1", after: "" }
     - { regexp: '^#?\s*slave-skip-errors', line: "slave-skip-errors = all", after: "" }
+    - { regexp: '^#?\s*read-only', line: "read-only = 1", after: "" }
   notify: restart mysql
 
 - name: Force restart mysql

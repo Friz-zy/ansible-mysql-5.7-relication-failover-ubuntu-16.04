@@ -1,5 +1,8 @@
 - include: server.yml
 
+- name: Disable read_only on master
+  mysql_variables: variable=read_only value=OFF
+
 - name: Ensure replication user exists on master
   mysql_user:
     name: "{{ replication_user.name }}"
