@@ -1,10 +1,6 @@
 ---
 # https://github.com/github/orchestrator
 
-- name: Install beta release from github as currently only it support sqlite backend
-  apt:
-    deb: https://github.com/github/orchestrator/releases/download/v3.0.pre-release/orchestrator_3.0_amd64.deb
-
 - name: Add orchestrator repo
   apt_repository:
     repo: deb https://packagecloud.io/github/orchestrator/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release | lower }} main
